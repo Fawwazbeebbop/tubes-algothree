@@ -1,80 +1,82 @@
 import streamlit as st
 import time
 
-st.set_page_config(
-    page_title="Sistem Kasir Greedy",
-    page_icon="💰",
-    layout="centered"
-)
+from greedy.iterative import greedy_iterative
+from greedy.recursive import greedy_recursive
 
-st.markdown("""
-<style>
-.main {
-    background-color: #f9fafb;
+st.set_page_config(page_title="Sistem Kasir Greedy", page_icon="💰")
+
+# COINS = [1000, 500, 200, 100]
+COINS = [500, 200, 100]
+
+ITEMS = {
+    "Beras 5kg": {"price": 65000, "img": "img/beras.jpg"},
+    "Minyak Goreng": {"price": 18000, "img": "img/minyak.jpg"},
+    "Gula Pasir": {"price": 14000, "img": "img/gula.jpg"},
+    "Telur 1kg": {"price": 28000, "img": "img/telor.jpg"},
+    "Mie Instan": {"price": 3500, "img": "img/mie.jpg"},
+    "Susu UHT": {"price": 7000, "img": "img/susu.jpg"},
+    "Kopi": {"price": 12000, "img": "img/kopi.jpg"},
+    "Teh": {"price": 8000, "img": "img/teh.jpg"},
+    "Sabun Mandi": {"price": 6000, "img": "img/sabun.jpg"},
+    "Deterjen": {"price": 15000, "img": "img/deterjen.jpg"}
 }
 
-.title {
-    text-align: center;
-    color: #1f2937;
-}
+st.title("Sistem Kasir Sederhana")
 
-.card {
-    background-color: #99C5F1;
-    padding: 10px;
-    border-radius: 12px;
-    margin-top: 7px;
-    margin-bottom: 7px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-}
+left_col, right_col = st.columns([2, 1])
 
-.result-title {
-    color: #2563eb;
-    font-weight: bold;
-}
+total_belanja = 0
+jumlah_barang = {}
 
-.time {
-    color: #16a34a;
-    font-size: 14px;
-}
-</style>
-""", unsafe_allow_html=True)
+# LEFT: LIST BARANG
 
-from recursive import greedy_recursive
-from iterative import greedy_iterative
+with left_col:
+    st.markdown("### 🛒 Daftar Barang")
 
-COINS = [5000, 2000, 1000, 500, 200, 100]
+    for item, data in ITEMS.items():
+        col_img, col_input = st.columns([1, 3])
 
-st.markdown("<h1 class='title'>💰 Sistem Kasir</h1>", unsafe_allow_html=True)
-st.markdown("<h4 class='title'>Perbandingan Algoritma Greedy Iteratif & Rekursif</h4>", unsafe_allow_html=True)
+        with col_img:
+            st.image(data["img"], width=70)
 
-st.divider()
+        with col_input:
+            qty = st.number_input(
+                f"{item} (Rp {data['price']})",
+                min_value=0,
+                step=1,
+                key=item
+            )
+            jumlah_barang[item] = qty
+            total_belanja += qty * data["price"]
 
-total_belanja = st.number_input("Total Belanja (Rp)", min_value=0, step=100)
-uang_dibayar = st.number_input("Uang Dibayar (Rp)", min_value=0, step=100)
+# RIGHT: HASIL
 
-if st.button("Hitung Kembalian"):
-    if uang_dibayar < total_belanja:
-        st.error("❌ Uang dibayar kurang dari total belanja!")
-    else:
-        kembalian = uang_dibayar - total_belanja
-        st.success(f"✅ Kembalian: Rp {kembalian}")
+with right_col:
+    st.markdown("### 💵 Ringkasan Transaksi")
+    st.success(f"Total Belanja: Rp {total_belanja}")
 
-        start = time.perf_counter()
-        iteratif_result = greedy_iterative(kembalian, COINS)
-        iteratif_time = time.perf_counter() - start
+    uang_dibayar = st.number_input("Uang Dibayar (Rp)", min_value=0, step=100)
 
-        start = time.perf_counter()
-        rekursif_result = greedy_recursive(kembalian, COINS)
-        rekursif_time = time.perf_counter() - start
-        
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<p class='result-title'>🔁 Greedy Iteratif</p>", unsafe_allow_html=True)
-        st.write(iteratif_result)
-        st.markdown(f"<p class='time'>⏱ Waktu Eksekusi: {iteratif_time:.8f} detik</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+    if st.button("Hitung Kembalian"):
+        if uang_dibayar < total_belanja:
+            st.error("Uang dibayar kurang!")
+        else:
+            kembalian = uang_dibayar - total_belanja
+            st.success(f"Kembalian: Rp {kembalian}")
 
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<p class='result-title'>🔂 Greedy Rekursif</p>", unsafe_allow_html=True)
-        st.write(rekursif_result)
-        st.markdown(f"<p class='time'>⏱ Waktu Eksekusi: {rekursif_time:.8f} detik</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+            start = time.perf_counter()
+            hasil_iteratif = greedy_iterative(kembalian, COINS)
+            waktu_iteratif = time.perf_counter() - start
+
+            start = time.perf_counter()
+            hasil_rekursif = greedy_recursive(kembalian, COINS)
+            waktu_rekursif = time.perf_counter() - start
+
+            st.markdown("#### 🔁 Greedy Iteratif")
+            st.write(hasil_iteratif)
+            st.caption(f"Waktu: {waktu_iteratif:.8f} detik")
+
+            st.markdown("#### 🔂 Greedy Rekursif")
+            st.write(hasil_rekursif)
+            st.caption(f"Waktu: {waktu_rekursif:.8f} detik")
