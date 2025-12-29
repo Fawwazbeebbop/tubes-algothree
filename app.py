@@ -7,7 +7,7 @@ from greedy.recursive import greedy_recursive
 st.set_page_config(page_title="Sistem Kasir Greedy", page_icon="💰")
 
 # COINS = [1000, 500, 200, 100]
-COINS = [500, 200, 100]
+COINS = [1000, 500, 200, 100]
 
 ITEMS = {
     "Beras 5kg": {"price": 65000, "img": "img/beras.jpg"},
