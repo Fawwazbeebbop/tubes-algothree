@@ -4,7 +4,7 @@ import time
 from greedy.iterative import greedy_iterative
 from greedy.recursive import greedy_recursive
 
-st.set_page_config(page_title="Sistem Kasir Greedy", page_icon="💰")
+st.set_page_config(page_title="Koperasi", page_icon="💰")
 
 COINS = [1000, 500, 200, 100]
 
@@ -22,7 +22,7 @@ ITEMS = {
     "Deterjen": {"price": 15000, "img": "img/deterjen.jpg"}
 }
 
-st.title("Sistem Kasir Sederhana")
+st.title("Koperasi Bahagia")
 
 left_col, right_col = st.columns([2, 1])
 
