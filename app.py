@@ -6,9 +6,9 @@ from greedy.recursive import greedy_recursive
 
 st.set_page_config(page_title="Sistem Kasir Greedy", page_icon="💰")
 
-# COINS = [1000, 500, 200, 100]
 COINS = [1000, 500, 200, 100]
 
+# Statis data
 ITEMS = {
     "Beras 5kg": {"price": 65000, "img": "img/beras.jpg"},
     "Minyak Goreng": {"price": 18000, "img": "img/minyak.jpg"},
@@ -29,8 +29,6 @@ left_col, right_col = st.columns([2, 1])
 total_belanja = 0
 jumlah_barang = {}
 
-# LEFT: LIST BARANG
-
 with left_col:
     st.markdown("### 🛒 Daftar Barang")
 
@@ -49,8 +47,6 @@ with left_col:
             )
             jumlah_barang[item] = qty
             total_belanja += qty * data["price"]
-
-# RIGHT: HASIL
 
 with right_col:
     st.markdown("### 💵 Ringkasan Transaksi")
